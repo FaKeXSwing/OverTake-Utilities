@@ -1,0 +1,19 @@
+{
+    "environment": "development",
+
+    "clientIds": {
+        "production": "1449404814101315726",
+        "development": "1450165842099830985"
+    },
+    
+    "developers": [ "625777528560418836", "923163161291542548" ],
+    "developmentServer": "1422241422907670679",
+
+    "roles": {
+        "verified": "1422241774033961031"
+    },
+    "channels": {
+        "auditLogs": "1449408606821945529",
+        "moderationLogs": "1449408606821945529"
+    }
+}

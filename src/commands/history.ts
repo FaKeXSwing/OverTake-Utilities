@@ -1,0 +1,105 @@
+import { APIEmbed, APIEmbedField, ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
+import { Command } from "../types/CommandType";
+import { promisify } from "util";
+import { channels } from '../../config.json'
+import { getCasesByUser, registerCase } from "../utilities/moderation";
+import { Infraction } from "../models/case";
+import { convertToRealtime } from "../utilities/parseLength";
+
+const wait = promisify(setTimeout)
+
+export const command: Command = {
+    data: {
+        name: 'history',
+        description: "Returns the moderation history of a user.",
+        options: [
+            {
+                name: 'target',
+                type: ApplicationCommandOptionType.User,
+                description: 'A valid user to view the history of.',
+            },
+            {
+                name: 'page',
+                type: ApplicationCommandOptionType.Number,
+                description: 'Select the page to view.',
+            },
+        ]
+    },
+
+    permissions: PermissionsBitField.Flags.ModerateMembers,
+
+    callback: async (client, interaction) => {
+        const embed = new EmbedBuilder()
+
+        const targetUser = interaction.options.getUser("target") || interaction.user
+        if (!targetUser || targetUser.bot) {
+            embed.setDescription("❌ A valid user must be provided for this command.")
+                .setColor("Red")
+            return interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+        }
+
+        if (!interaction.guild) {
+            embed.setDescription("❌ This command can only be run in a guild.")
+                .setColor("Red")
+            return interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+        }
+
+        const page = interaction.options.getNumber("page") || 1
+        try {
+            const rawCases = await getCasesByUser(
+                interaction.guild.id,
+                targetUser.id
+            )
+
+            if (!rawCases || rawCases.length < 1) {
+                embed.setDescription("❌ No history found for that user.")
+                    .setColor("Red")
+                return interaction.reply({ embeds: [embed], flags: "Ephemeral" })
+            }
+
+            rawCases.sort((a, b) => a.caseId - b.caseId)
+
+            const LOGS_PER_PAGE = 5;
+
+            const totalPages = Math.max(1, Math.ceil(rawCases.length / LOGS_PER_PAGE));
+            const startIndex = (page - 1) * LOGS_PER_PAGE;
+            const endIndex = startIndex + LOGS_PER_PAGE
+
+            const cases = rawCases.slice(startIndex, endIndex);
+
+            embed.setTitle(`Modlogs for ${targetUser.tag} (Page ${page} of ${totalPages})`)
+                .setColor("Blue")
+                .setTimestamp()
+                .setFooter({ text: `Page ${page} of ${totalPages}` })
+
+            const fields: APIEmbedField[] = []
+
+            const ACTION_FORMATTED: Record<Infraction, string> = {
+                WARN: "Warn",
+                KICK: "Kick",
+                BAN: "Ban",
+                UNBAN: "Unban",
+                MUTE: "Mute",
+                UNMUTE: "Unmute"
+            };
+
+            cases.forEach((c) => {
+                fields.push({
+                    name: `Case #${c.caseId} • ${ACTION_FORMATTED[c.action]}`,
+                    value: `\n**User:** ${targetUser.tag} (${targetUser.id})\n**Moderator:** <@${c.issuerId}> (${targetUser.id})\n${c.duration ? `**Duration:** ${convertToRealtime(c.duration)}\n` : ""}**Reason:** ${c.reason} - <t:${Math.floor(c.createdAt.getTime() / 1000)}:f>`,
+                    inline: false,
+                })
+            })
+
+            embed.addFields(fields)
+
+            interaction.reply({ embeds: [embed] })
+        } catch (err) {
+            interaction.reply({
+                content: `An internal error occured when trying to fetch history for <@${targetUser.id}>: ${err}`,
+                flags: "Ephemeral"
+            });
+            console.warn(err);
+        }
+    },
+}
