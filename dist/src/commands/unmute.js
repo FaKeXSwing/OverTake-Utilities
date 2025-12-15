@@ -1,11 +1,9 @@
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
-import { Command } from "../types/CommandType.js";
 import { promisify } from "util";
 import { getActiveCaseByUserAndInfraction, registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
-const wait = promisify(setTimeout)
-
-export const command: Command = {
+const wait = promisify(setTimeout);
+export const command = {
     data: {
         name: 'unmute',
         description: "Unmutes a member that has been timed out.",
@@ -23,37 +21,27 @@ export const command: Command = {
             },
         ]
     },
-
     permissions: PermissionsBitField.Flags.ModerateMembers,
-
     callback: async (client, interaction) => {
-        interaction.deferReply({ flags: "Ephemeral" })
-
-        await wait(1000)
-
-        const issuerUser = interaction.user
-        const targetUser = interaction.options.getUser("target")
-        if (!targetUser || targetUser.bot || targetUser == issuerUser) return interaction.editReply(`A valid user must be provided for this command.`);
-        if (!interaction.guild) return interaction.editReply(`This command can only be run in a guild.`)
-        const reason = interaction.options.getString("reason") || "No reason provided"
-
-        const member = interaction.guild?.members.cache.get(targetUser.id)
-        if (!member) return interaction.editReply(`A valid user must be provided.`);
-
+        interaction.deferReply({ flags: "Ephemeral" });
+        await wait(1000);
+        const issuerUser = interaction.user;
+        const targetUser = interaction.options.getUser("target");
+        if (!targetUser || targetUser.bot || targetUser == issuerUser)
+            return interaction.editReply(`A valid user must be provided for this command.`);
+        if (!interaction.guild)
+            return interaction.editReply(`This command can only be run in a guild.`);
+        const reason = interaction.options.getString("reason") || "No reason provided";
+        const member = interaction.guild?.members.cache.get(targetUser.id);
+        if (!member)
+            return interaction.editReply(`A valid user must be provided.`);
         try {
-            const muteCase = await getActiveCaseByUserAndInfraction(
-                interaction.guild.id,
-                targetUser.id,
-                Infraction.MUTE,
-            )
-
-            if (!muteCase) return interaction.editReply(`This user is not currently muted!`)
-
-            member.timeout(null)
-
+            const muteCase = await getActiveCaseByUserAndInfraction(interaction.guild.id, targetUser.id, Infraction.MUTE);
+            if (!muteCase)
+                return interaction.editReply(`This user is not currently muted!`);
+            member.timeout(null);
             muteCase.active = false;
-            await muteCase.save()
-
+            await muteCase.save();
             await registerCase({
                 action: Infraction.UNMUTE,
                 guildId: interaction.guild.id,
@@ -61,16 +49,15 @@ export const command: Command = {
                 issuerId: issuerUser.id,
                 reason: reason,
                 client
-            })
-
+            });
             const embed = new EmbedBuilder()
                 .setDescription(`✅ **${targetUser.username} was unmuted** | ${reason}`)
-                .setColor("Green")
-
-            interaction.editReply({ embeds: [embed] })
-        } catch (err) {
+                .setColor("Green");
+            interaction.editReply({ embeds: [embed] });
+        }
+        catch (err) {
             interaction.editReply(`An internal error occured when trying to unmute <@${targetUser.id}>: ${err}`);
             console.error(err);
         }
     },
-}
+};

@@ -2,9 +2,9 @@
   "name": "overtake-utilities",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/src/index.mjs",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/index.mts",
     "build": "tsc",
     "start": "node ."
   },

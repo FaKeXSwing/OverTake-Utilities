@@ -1,10 +1,11 @@
 import { ApplicationCommandOptionType, Embed, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType";
+import { Command } from "../types/CommandType.js";
 import { promisify } from "util";
-import { channels } from '../../config.json'
-import { getCaseById } from "../utilities/moderation";
-import { Case, Infraction } from "../models/case";
-import { convertToRealtime } from "../utilities/parseLength";
+import config from '../../config.json' with { type: "json" }
+const { channels } = config
+import { getCaseById } from "../utilities/moderation.js";
+import { Case, Infraction } from "../models/case.js";
+import { convertToRealtime } from "../utilities/parseLength.js";
 
 const wait = promisify(setTimeout)
 

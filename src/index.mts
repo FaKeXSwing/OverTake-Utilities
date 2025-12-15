@@ -1,10 +1,12 @@
 import 'dotenv/config';
 import { Client, IntentsBitField, Partials } from 'discord.js'
-import { commands } from './commands';
-import { setupDatabase } from './database/mongoose';
-import { environment } from "../config.json";
+import { commands } from './utilities/commands.js';
+import { setupDatabase } from './database/mongoose.js';
+import config from "../config.json" with { type: "json" }
+import { Environment } from './utilities/registerCommands.js';
 import fs from 'fs';
-import { Environment } from './utilities/registerCommands';
+
+const { environment } = config
 
 const client: Client = new Client({
     intents: [
@@ -20,17 +22,16 @@ const client: Client = new Client({
     ]
 })
 
-const commandFiles = fs.readdirSync('./src/commands').filter(f => f.endsWith(".ts"));
+const commandFiles = fs.readdirSync('./dist/src/commands').filter(f => f.endsWith(".js"));
 for (const commandFile of commandFiles) {
-    const { command } = await import(`./commands/${commandFile}`) // await import(path.join("/commands", commandFile)) //require(path.join(commandsPath, commandFile))
-    if (!command || !command.data) continue
+    const { command } = await import(`./commands/${commandFile}`)
     commands.set(command.data.name, command)
 }
 
-const eventFiles = fs.readdirSync("./src/events").filter(f => f.endsWith(".ts"))
+const eventFiles = fs.readdirSync("./dist/src/events").filter(f => f.endsWith(".js"))
 for (const eventFile of eventFiles) {
     const eventName = eventFile.split(".")[0]
-    const event =  await import(`./events/${eventFile}`) // require(path.join(eventsPath, eventFile))
+    const event =  await import(`./events/${eventFile}`)
     client.on(eventName, async (...args) => event.execute(client, ...args))
 }
 

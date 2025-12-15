@@ -1,8 +1,9 @@
-import { CaseModel, Case, Infraction } from "../models/case";
-import { getNextCaseId } from "../models/caseCounter";
+import { CaseModel, Case, Infraction } from "../models/case.js";
+import { getNextCaseId } from "../models/caseCounter.js";
 import { APIEmbedField, Client, Colors, EmbedBuilder, EmbedField, TextChannel } from "discord.js";
-import { convertToRealtime } from "./parseLength";
-import { channels } from "../../config.json";
+import { convertToRealtime } from "./parseLength.js";
+import config from '../../config.json' with { type: "json" }
+const { channels } = config
 import { HydratedDocument } from "mongoose";
 
 export interface CaseOptions {

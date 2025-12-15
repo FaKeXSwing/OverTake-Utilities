@@ -1,10 +1,8 @@
-import { ApplicationCommandOptionType, Colors, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, Colors, EmbedBuilder, PermissionsBitField } from "discord.js";
 import { promisify } from "util";
-const wait = promisify(setTimeout)
-
-export const command: Command = {
-     data: {
+const wait = promisify(setTimeout);
+export const command = {
+    data: {
         name: "embed",
         description: "Create a custom embed.",
         options: [
@@ -46,14 +44,11 @@ export const command: Command = {
             },
         ]
     },
-
     restrictions: {
         userRestricted: true,
         serverRestricted: true,
     },
-
     permissions: PermissionsBitField.Flags.Administrator,
-
     callback: async (client, interaction) => {
         const title = interaction.options.getString("title");
         const description = interaction.options.getString("description");
@@ -61,29 +56,28 @@ export const command: Command = {
         const footer = interaction.options.getString("footer");
         const thumbnail = interaction.options.getString("thumbnail");
         const image = interaction.options.getString("image");
-
-        interaction.deferReply({flags: "Ephemeral"})
-
-        await wait(1000)
-
+        interaction.deferReply({ flags: "Ephemeral" });
+        await wait(1000);
         try {
             const embed = new EmbedBuilder()
                 .setTitle(title)
                 .setDescription(description)
-                .setColor(color as keyof typeof Colors || Colors.DarkGrey);
-    
-            if (footer) embed.setFooter({ text: footer });
-            if (thumbnail) embed.setThumbnail(thumbnail);
-            if (image) embed.setImage(image);
-    
-            const channel = interaction.channel as TextChannel
-            if (!channel) return interaction.editReply("This command can only be used inside of a guild!")
-            channel.send({ embeds: [embed]})
-
+                .setColor(color || Colors.DarkGrey);
+            if (footer)
+                embed.setFooter({ text: footer });
+            if (thumbnail)
+                embed.setThumbnail(thumbnail);
+            if (image)
+                embed.setImage(image);
+            const channel = interaction.channel;
+            if (!channel)
+                return interaction.editReply("This command can only be used inside of a guild!");
+            channel.send({ embeds: [embed] });
             await interaction.editReply("Successfully created message embed!");
-        } catch (err) {
-            console.error(err)
-            interaction.editReply(`Failed to create message embed for the following reason: ${"```"}${err}${"```"} `)
+        }
+        catch (err) {
+            console.error(err);
+            interaction.editReply(`Failed to create message embed for the following reason: ${"```"}${err}${"```"} `);
         }
     },
-}
+};

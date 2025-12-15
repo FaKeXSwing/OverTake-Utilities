@@ -1,5 +1,6 @@
 import { Client, EmbedBuilder, GuildMember, Message, TextChannel } from "discord.js";
-import { channels } from '../../config.json'
+import config from '../../config.json' with { type: "json" }
+const { channels } = config
 
 export async function execute(client: Client, message: Message) {
 

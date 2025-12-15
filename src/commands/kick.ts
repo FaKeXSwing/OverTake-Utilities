@@ -1,9 +1,8 @@
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType";
+import { Command } from "../types/CommandType.js";
 import { promisify } from "util";
-import { channels } from '../../config.json'
-import { registerCase } from "../utilities/moderation";
-import { Infraction } from "../models/case";
+import { registerCase } from "../utilities/moderation.js";
+import { Infraction } from "../models/case.js";
 
 const wait = promisify(setTimeout)
 

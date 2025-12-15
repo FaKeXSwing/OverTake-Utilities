@@ -1,5 +1,7 @@
 import { APIEmbedField, Client, EmbedBuilder, EmbedField, GuildMember, TextChannel } from "discord.js";
-import { channels } from '../../config.json'
+import config from '../../config.json' with { type: "json" }
+const { channels } = config
+
 
 export async function execute(client: Client, oldMember: GuildMember, newMember: GuildMember) {
     const userId = newMember.user.id
@@ -10,13 +12,13 @@ export async function execute(client: Client, oldMember: GuildMember, newMember:
     if (oldMember.roles.cache.size > newMember.roles.cache.size) {
         embed.setTitle("ROLE(S) REMOVED")
         .setColor("#ED4245")
-        .setAuthor({ name: `${newMember.user.tag}`, iconURL: `${newMember.user.displayAvatarURL({ format: "png", dynamic: true })}`})
+        .setAuthor({ name: `${newMember.user.tag}`, iconURL: `${newMember.user.displayAvatarURL()}`})
         .setURL(`https://discordapp.com/users/${userId}`)
         .setThumbnail(newMember.displayAvatarURL({ size: 128 }))
         .setFooter({ text: `User ID: ${userId}` })
         .setTimestamp()
 
-        const oldRoles = []
+        const oldRoles: APIEmbedField[] = []
         oldMember.roles.cache.forEach(role => {
             if (!newMember.roles.cache.has(role.id)) {
                 oldRoles.push({
@@ -31,7 +33,7 @@ export async function execute(client: Client, oldMember: GuildMember, newMember:
     } else if (oldMember.roles.cache.size < newMember.roles.cache.size) {
         embed.setTitle("ROLE(S) ADDED")
         .setColor("#57F287")
-        .setAuthor({ name: `${newMember.user.tag}`, iconURL: `${newMember.user.displayAvatarURL({ format: "png", dynamic: true })}`})
+        .setAuthor({ name: `${newMember.user.tag}`, iconURL: `${newMember.user.displayAvatarURL()}`})
         .setURL(`https://discordapp.com/users/${userId}`)
         .setThumbnail(newMember.displayAvatarURL({ size: 128 }))
         .setFooter({ text: `User ID: ${userId}` })
@@ -52,7 +54,7 @@ export async function execute(client: Client, oldMember: GuildMember, newMember:
     }
 
 
-    const channel = await client.channels.cache.get(channels.auditLogs)
+    const channel = await client.channels.cache.get(channels.auditLogs) as TextChannel
     if (channel && channel.isTextBased()){
         channel.send({ embeds: [ embed ]})
     }

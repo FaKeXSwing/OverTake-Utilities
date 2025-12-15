@@ -1,5 +1,6 @@
 import { Client, REST, Routes } from "discord.js";
-import { clientIds, environment, developmentServer } from "../../config.json"
+import config from '../../config.json' with { type: "json" }
+const { clientIds, environment, developmentServer } = config
 import fs from 'fs'
 
 export enum Environment {
@@ -10,7 +11,7 @@ export enum Environment {
 export async function registerCommands(client: Client) {
     const commands = []
 
-    const commandFiles = fs.readdirSync("./src/commands")
+    const commandFiles = fs.readdirSync("./dist/src/commands").filter(f => f.endsWith(".js"));
     for (const commandFile of commandFiles) {
         const { command } = await import(`../commands/${commandFile}`)
         if (!command || !command.data) continue
@@ -20,7 +21,6 @@ export async function registerCommands(client: Client) {
     const token = environment === Environment.Production ? process.env.PROD_TOKEN : process.env.DEV_TOKEN
     const rest = new REST({ version: "10" }).setToken(token || "")
     const clientId = clientIds[environment as Environment]
-    console.log(clientId)
 
     try {
         console.log(`⚙️  Registering commands in the ${environment} environment.`)

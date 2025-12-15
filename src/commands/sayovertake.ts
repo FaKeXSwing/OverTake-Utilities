@@ -1,8 +1,6 @@
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType";
+import { Command } from "../types/CommandType.js";
 import { promisify } from "util";
-import { channels } from '../../config.json'
-
 const wait = promisify(setTimeout)
 
 export const command: Command = {
