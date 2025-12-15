@@ -1,5 +1,5 @@
 {
-    "environment": "development",
+    "environment": "production",
 
     "clientIds": {
         "production": "1449404814101315726",
