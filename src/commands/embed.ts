@@ -49,7 +49,6 @@ export const command: Command = {
 
     restrictions: {
         userRestricted: true,
-        serverRestricted: true,
     },
 
     permissions: PermissionsBitField.Flags.Administrator,

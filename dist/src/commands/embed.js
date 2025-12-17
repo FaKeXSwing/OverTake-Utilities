@@ -46,7 +46,6 @@ export const command = {
     },
     restrictions: {
         userRestricted: true,
-        serverRestricted: true,
     },
     permissions: PermissionsBitField.Flags.Administrator,
     callback: async (client, interaction) => {
