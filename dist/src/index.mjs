@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import './keep_alive.js'
+import './keep_alive.js';
 import { Client, IntentsBitField, Partials } from 'discord.js';
 import { commands } from './utilities/commands.js';
 import { setupDatabase } from './database/mongoose.js';

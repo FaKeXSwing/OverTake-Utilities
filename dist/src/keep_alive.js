@@ -1,6 +1,5 @@
-import http from 'http'
-
+import http from 'http';
 http.createServer(function (req, res) {
-  res.write("Online");
-  res.end();
+    res.write("Online");
+    res.end();
 }).listen(8080);

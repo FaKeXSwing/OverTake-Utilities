@@ -11,6 +11,7 @@
     },
     "channels": {
         "auditLogs": "1321951636112806041",
-        "moderationLogs": "1432151529586032844"
+        "moderationLogs": "1432151529586032844",
+        "welcomeChannel": "1368626249047474247"
     }
 }
