@@ -1,6 +1,6 @@
 import { ChatInputCommandInteraction, Client, Guild, GuildMember, Interaction } from "discord.js";
 import config from '../../config.json' with { type: "json" }
-const { developmentServer, developers } = config
+const { servers, developers } = config
 import { commands } from "../utilities/commands.js";
 
 export async function execute(client: Client, interaction: Interaction) {
@@ -10,7 +10,7 @@ export async function execute(client: Client, interaction: Interaction) {
 
         try {
             if (command.restrictions) {
-                if (command.restrictions.serverRestricted && interaction.guildId !== developmentServer) {
+                if (command.restrictions.serverRestricted && interaction.guildId !== servers.development) {
                     interaction.reply({
                         content: "This command is restricted to development servers only!",
                         flags: "Ephemeral"

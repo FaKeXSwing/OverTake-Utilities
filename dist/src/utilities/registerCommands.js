@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js";
 import config from '../../config.json' with { type: "json" };
-const { clientIds, environment, developmentServer } = config;
+const { clientIds, environment, servers } = config;
 import fs from 'fs';
 export var Environment;
 (function (Environment) {
@@ -22,10 +22,10 @@ export async function registerCommands(client) {
     try {
         console.log(`⚙️  Registering commands in the ${environment} environment.`);
         if (environment === "development") {
-            await rest.put(Routes.applicationGuildCommands(clientId, developmentServer), { body: commands });
+            await rest.put(Routes.applicationGuildCommands(clientId, servers.development), { body: commands });
         }
         else {
-            await rest.put(Routes.applicationCommands(clientId), { body: commands });
+            await rest.put(Routes.applicationGuildCommands(clientId, servers.production), { body: commands });
         }
         console.log(`✅ Successfully registered commands in the ${environment} environment!`);
     }

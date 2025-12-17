@@ -1,6 +1,6 @@
 import { Client, REST, Routes } from "discord.js";
 import config from '../../config.json' with { type: "json" }
-const { clientIds, environment, developmentServer } = config
+const { clientIds, environment, servers } = config
 import fs from 'fs'
 
 export enum Environment {
@@ -26,12 +26,12 @@ export async function registerCommands(client: Client) {
         console.log(`⚙️  Registering commands in the ${environment} environment.`)
         if (environment === "development") {
             await rest.put(
-                Routes.applicationGuildCommands(clientId, developmentServer),
+                Routes.applicationGuildCommands(clientId, servers.development),
                 { body: commands}
             )
         } else {
             await rest.put(
-                Routes.applicationCommands(clientId),
+                Routes.applicationGuildCommands(clientId, servers.production),
                 { body: commands}
             )
         }
