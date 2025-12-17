@@ -1,7 +1,8 @@
 import { Client, EmbedBuilder, GuildMember, TextChannel } from "discord.js";
+import config from '../../config.json' with { type: "json" }
+const { channels } = config
 
 export async function execute(client: Client, guildMember: GuildMember) {
-    const channelId = "1449408606821945529"
     const userId = guildMember.user.id
 
     const embed = new EmbedBuilder()
@@ -17,7 +18,7 @@ export async function execute(client: Client, guildMember: GuildMember) {
     .setFooter({ text: `User ID: ${userId}`})
     .setTimestamp()
 
-    const channel = await client.channels.cache.get(channelId) as TextChannel
+    const channel = await client.channels.cache.get(channels.auditLogs) as TextChannel
     if (channel && channel.isTextBased()){
         channel.send({ embeds: [ embed ]})
     }

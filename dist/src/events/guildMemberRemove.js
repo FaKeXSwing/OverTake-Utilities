@@ -1,6 +1,7 @@
 import { EmbedBuilder } from "discord.js";
+import config from '../../config.json' with { type: "json" };
+const { channels } = config;
 export async function execute(client, guildMember) {
-    const channelId = "1449408606821945529";
     const userId = guildMember.user.id;
     const embed = new EmbedBuilder()
         .setTitle("LEAVE LOG")
@@ -11,7 +12,7 @@ export async function execute(client, guildMember) {
         .addFields({ name: "Username", value: `<@${userId}> ${guildMember.user.tag}` }, { name: "Account Created", value: `${new Date(guildMember.user.createdTimestamp).toLocaleDateString()}` })
         .setFooter({ text: `User ID: ${userId}` })
         .setTimestamp();
-    const channel = await client.channels.cache.get(channelId);
+    const channel = await client.channels.cache.get(channels.auditLogs);
     if (channel && channel.isTextBased()) {
         channel.send({ embeds: [embed] });
     }
