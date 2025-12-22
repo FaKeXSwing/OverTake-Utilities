@@ -1,5 +1,5 @@
 {
-    "environment": "production",
+    "environment": "development",
 
     "clientIds": {
         "production": "1449404814101315726",
@@ -13,11 +13,16 @@
         "development": "1422241422907670679"
     },
     "roles": {
-        "verified": "1422241774033961031"
+        "verified": "1422241774033961031",
+        "staff": "1324152526148341790"
     },
     "channels": {
         "auditLogs": "1321951636112806041",
         "moderationLogs": "1432151529586032844",
         "welcomeChannel": "1368626249047474247"
+    },
+    "categories": {
+        "application": "1452413766938398952",
+        "support": "1452413874228957469"
     }
 }

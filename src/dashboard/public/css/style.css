@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-color: #202020;
+}
+
+li,
+a,
+button,
+span {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+/* Header */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+}
+
+.navbar,
+.navbar li,
+.navbar a,
+.navbar span {
+    background-color: #24252A
+}
+
+/* Navbar Base */
+.navbar.base {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Logo */
+.navbar.base img {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.navbar.base a {
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.navbar.base a:hover {
+    color: #0088a9;
+}
+
+/* Links ul */
+.navbar.links {
+    list-style: none;
+}
+
+/* Links li */
+.navbar.links li {
+    display: inline-block;
+    padding: 0px 20px;
+}
+
+/* Links a */
+.navbar.links li a {
+    transition: all 0.3s ease 0s;
+}
+
+/* Links a:hover */
+.navbar.links li a:hover {
+    color: #0088a9;
+}
+
+button {
+    margin-left: 20px;
+    padding: 9px 25px;
+    background-color: rgba(0, 136, 169, 1);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+button:hover {
+    background-color: rgba(0, 136, 169, 0.8);
+}
