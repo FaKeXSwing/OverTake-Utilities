@@ -1,5 +1,5 @@
 {
-    "environment": "development",
+    "environment": "production",
     "clientIds": {
         "production": "1449404814101315726",
         "development": "1450165842099830985"
@@ -18,9 +18,5 @@
         "auditLogs": "1321951636112806041",
         "moderationLogs": "1432151529586032844",
         "welcomeChannel": "1368626249047474247"
-    },
-    "categories": {
-        "application": "1452413766938398952",
-        "support": "1452413874228957469"
     }
 }

@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import config from '../../config.json' with { type: "json" };
-const { servers, developers, categories, roles } = config;
+const { servers, developers, roles } = config;
 import { commands } from "../utilities/commands.js";
 function isAuthorized(interaction, command) {
     if (command.restrictions) {
