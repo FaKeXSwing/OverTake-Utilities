@@ -1,6 +1,6 @@
 import { Client, EmbedBuilder, GuildMember, Interaction } from "discord.js";
 import config from '../../config.json' with { type: "json" }
-const { servers, developers, categories, roles } = config
+const { servers, developers, roles } = config
 import { commands } from "../utilities/commands.js";
 import { AnyCommand, Command } from "../types/CommandType.js";
 
