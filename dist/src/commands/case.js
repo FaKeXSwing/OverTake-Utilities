@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 import config from '../../config.json' with { type: "json" };
 const { channels } = config;
@@ -6,18 +6,12 @@ import { getCaseById } from "../utilities/moderation.js";
 import { convertToRealtime } from "../utilities/parseLength.js";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: 'case',
-        description: "Returns a case by a specific case id.",
-        options: [
-            {
-                name: 'case_id',
-                type: ApplicationCommandOptionType.Integer,
-                description: 'A valid case id to reference.',
-                required: true,
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("case")
+        .setDescription("Returns a case by a specific case id.")
+        .addIntegerOption((option) => option.setName("case_id")
+        .setDescription("A valid case id to reference.")
+        .setRequired(true)),
     permissions: PermissionsBitField.Flags.ModerateMembers,
     callback: async (client, interaction) => {
         interaction.deferReply({ flags: "Ephemeral" });

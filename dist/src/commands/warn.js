@@ -1,26 +1,17 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 import { registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: 'warn',
-        description: "Warns a member for a transgression.",
-        options: [
-            {
-                name: 'target',
-                type: ApplicationCommandOptionType.User,
-                description: 'A valid user to warn.',
-                required: true,
-            },
-            {
-                name: 'reason',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid reason for warning the user.'
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("warn")
+        .setDescription("Warns a member for a transgression.")
+        .addUserOption((option) => option.setName("target")
+        .setDescription("A valid user to warn.")
+        .setRequired(true))
+        .addStringOption((option) => option.setName("reason")
+        .setDescription("A valid reason for warning the user.")),
     permissions: PermissionsBitField.Flags.ModerateMembers,
     callback: async (client, interaction) => {
         interaction.deferReply({ flags: "Ephemeral" });

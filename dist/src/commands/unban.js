@@ -1,26 +1,17 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 import { getActiveCaseByUserAndInfraction, registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: 'unban',
-        description: "Unbans a member from a Discord Guild.",
-        options: [
-            {
-                name: 'user_id',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid user id to unban.',
-                required: true,
-            },
-            {
-                name: 'reason',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid reason for unbanning the user.'
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("unban")
+        .setDescription("Unbans a member from the Discord Guild.")
+        .addStringOption((option) => option.setName("user_id")
+        .setDescription("A valid user id to unban.")
+        .setRequired(true))
+        .addStringOption((option) => option.setName("reason")
+        .setDescription("A valid reason for unbanning the user.")),
     permissions: PermissionsBitField.Flags.BanMembers,
     callback: async (client, interaction) => {
         interaction.deferReply({ flags: "Ephemeral" });

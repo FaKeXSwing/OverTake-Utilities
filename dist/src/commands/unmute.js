@@ -1,26 +1,17 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 import { getActiveCaseByUserAndInfraction, registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: 'unmute',
-        description: "Unmutes a member that has been timed out.",
-        options: [
-            {
-                name: 'target',
-                type: ApplicationCommandOptionType.User,
-                description: 'A valid user to mute.',
-                required: true,
-            },
-            {
-                name: 'reason',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid reason for unmuting the user.',
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("unmute")
+        .setDescription("Unmutes a member that has been timed out.")
+        .addUserOption((option) => option.setName("target")
+        .setDescription("A valid user to unmute.")
+        .setRequired(true))
+        .addStringOption((option) => option.setName("reason")
+        .setDescription("A valid reason for unmuting the user.")),
     permissions: PermissionsBitField.Flags.ModerateMembers,
     callback: async (client, interaction) => {
         interaction.deferReply({ flags: "Ephemeral" });
