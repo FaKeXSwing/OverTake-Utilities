@@ -1,35 +1,29 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 import { parseLength } from "../utilities/parseLength.js";
 import { registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'mute',
-        description: "Mutes a member for a transgression.",
-        options: [
-            {
-                name: 'target',
-                type: ApplicationCommandOptionType.User,
-                description: 'A valid user to mute.',
-                required: true,
-            },
-            {
-                name: 'length',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid length for the mute (1d, 2h, 30m etc.).',
-                required: true,
-            },
-            {
-                name: 'reason',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid reason for muting the user.',
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("mute")
+        .setDescription("Mutes a member for a transgression.")
+        .addUserOption((option) =>
+            option.setName("target")
+                .setDescription("A valid user to timeout.")
+                .setRequired(true)
+        )
+        .addStringOption((option) =>
+            option.setName("length")
+                .setDescription("A valid length for the mute (1d, 2h, 30m etc.).")
+                .setRequired(true)
+        )
+        .addStringOption((option) =>
+            option.setName("reason")
+                .setDescription("A valid reason for muting the user.")
+        ),
 
     permissions: PermissionsBitField.Flags.ModerateMembers,
 
@@ -70,7 +64,7 @@ export const command: Command = {
                 )
                 .setColor("Green")
 
-            interaction.editReply({ embeds: [ embed ] })
+            interaction.editReply({ embeds: [embed] })
         } catch (err) {
             interaction.editReply(`An internal error occured when trying to mute <@${targetUser.id}>: ${err}`);
             console.error(err);

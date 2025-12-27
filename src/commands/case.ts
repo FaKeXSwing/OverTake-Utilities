@@ -1,5 +1,5 @@
-import { ApplicationCommandOptionType, Embed, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, Embed, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 import config from '../../config.json' with { type: "json" }
 const { channels } = config
@@ -9,19 +9,15 @@ import { convertToRealtime } from "../utilities/parseLength.js";
 
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'case',
-        description: "Returns a case by a specific case id.",
-        options: [
-            { 
-                name: 'case_id', 
-                type: ApplicationCommandOptionType.Integer, 
-                description: 'A valid case id to reference.',
-                required: true, 
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("case")
+        .setDescription("Returns a case by a specific case id.")
+        .addIntegerOption((option) =>
+            option.setName("case_id")
+                .setDescription("A valid case id to reference.")
+                .setRequired(true)
+        ),
 
     permissions: PermissionsBitField.Flags.ModerateMembers,
 
@@ -45,23 +41,23 @@ export const command: Command = {
             { name: "👮 Issued By", value: `${"`"}${issuerUser.tag}${"`"} (${"`"}${issuerUser.id}${"`"})` },
             { name: "☎️ Infraction", value: `${"`"}${requestedCase.action}${"`"}`, inline: true },
             { name: "📝 Reason", value: requestedCase.reason, inline: true },
-            requestedCase.duration != undefined 
-            ? {name: "⌛ Duration", value: `${convertToRealtime(requestedCase.duration)}`} 
-            : undefined,
+            requestedCase.duration != undefined
+                ? { name: "⌛ Duration", value: `${convertToRealtime(requestedCase.duration)}` }
+                : undefined,
             requestedCase.expiry != undefined
-            ? {name: "⏰ Expiry", value: `<t:${Math.floor(requestedCase.expiry.getTime() / 1000)}:f> (<t:${Math.floor(requestedCase.expiry.getTime() / 1000)}:R>)`, inline: true }
-            : undefined
+                ? { name: "⏰ Expiry", value: `<t:${Math.floor(requestedCase.expiry.getTime() / 1000)}:f> (<t:${Math.floor(requestedCase.expiry.getTime() / 1000)}:R>)`, inline: true }
+                : undefined
         ];
 
         const caseEmbed = new EmbedBuilder()
-        .setTitle(`CASE ${requestedCase?.caseId}`)
-        .setURL(`https://discordapp.com/users/${punishedUser.id}`)
-        .setColor("#3498DB")
-        .addFields(fields.filter((f): f is Exclude<typeof f, undefined> => Boolean(f)))
-        .setFooter({ text: `User ID: ${punishedUser.id}`})
-        .setTimestamp(requestedCase.createdAt)
+            .setTitle(`CASE ${requestedCase?.caseId}`)
+            .setURL(`https://discordapp.com/users/${punishedUser.id}`)
+            .setColor("#3498DB")
+            .addFields(fields.filter((f): f is Exclude<typeof f, undefined> => Boolean(f)))
+            .setFooter({ text: `User ID: ${punishedUser.id}` })
+            .setTimestamp(requestedCase.createdAt)
         interaction.editReply({
-            embeds: [ caseEmbed ]
+            embeds: [caseEmbed]
         })
     },
 }

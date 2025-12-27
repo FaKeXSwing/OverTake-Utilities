@@ -1,51 +1,37 @@
-import { ApplicationCommandOptionType, Colors, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, Colors, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-     data: {
-        name: "embed",
-        description: "Create a custom embed.",
-        options: [
-            {
-                name: "title",
-                description: "The title of the embed",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "description",
-                description: "The embed's description",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "color",
-                description: "A hex color (example: #ff0000)",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "footer",
-                description: "Footer text",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "thumbnail",
-                description: "Thumbnail image URL",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "image",
-                description: "Main image URL",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("embed")
+        .setDescription("DEVELOPER ONLY: Creates a custom embed.")
+        .addStringOption((option) =>
+            option.setName("title")
+                .setDescription("The embed's title.")
+        )
+        .addStringOption((option) =>
+            option.setName("description")
+                .setDescription("The embed's description.")
+        )
+        .addStringOption((option) =>
+            option.setName("color")
+                .setDescription("A hex color (example: #ff0000).")
+        )
+        .addStringOption((option) =>
+            option.setName("footer")
+                .setDescription("The embed's footer.")
+        )
+        .addStringOption((option) =>
+            option.setName("thumbnail")
+                .setDescription("The embed's thumbnail.")
+        )
+        .addStringOption((option) =>
+            option.setName("image")
+                .setDescription("The embed's image.")
+        ),
+
 
     restrictions: {
         userRestricted: true,
@@ -61,7 +47,7 @@ export const command: Command = {
         const thumbnail = interaction.options.getString("thumbnail");
         const image = interaction.options.getString("image");
 
-        interaction.deferReply({flags: "Ephemeral"})
+        interaction.deferReply({ flags: "Ephemeral" })
 
         await wait(1000)
 
@@ -70,14 +56,14 @@ export const command: Command = {
                 .setTitle(title)
                 .setDescription(description)
                 .setColor(color as keyof typeof Colors || Colors.DarkGrey);
-    
+
             if (footer) embed.setFooter({ text: footer });
             if (thumbnail) embed.setThumbnail(thumbnail);
             if (image) embed.setImage(image);
-    
+
             const channel = interaction.channel as TextChannel
             if (!channel) return interaction.editReply("This command can only be used inside of a guild!")
-            channel.send({ embeds: [embed]})
+            channel.send({ embeds: [embed] })
 
             await interaction.editReply("Successfully created message embed!");
         } catch (err) {

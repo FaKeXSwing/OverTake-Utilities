@@ -1,34 +1,28 @@
-import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ComponentBuilder, Embed, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ComponentBuilder, Embed, EmbedBuilder, Interaction, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: "devmessage",
-        description: "Developer only.",
-        options: [
-            {
-                name: 'channel',
-                type: ApplicationCommandOptionType.Channel,
-                description: 'A valid channel to post in.',
-                required: true,
-            },
-            {
-                name: 'message',
-                type: ApplicationCommandOptionType.String,
-                choices: [
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("devmessage")
+        .setDescription("Developer only.")
+        .addStringOption((option) =>
+            option.setName("message")
+                .setDescription("Select the embed to post.")
+                .setRequired(true)
+                .addChoices(
                     { name: "Rules Embed", value: "rulesEmbed" },
                     { name: "About Embed", value: "aboutEmbed" },
                     { name: "Welcome Embed", value: "welcomeEmbed" },
                     { name: "Invest Embed", value: "investEmbed" },
                     { name: "Policies Embed", value: "policiesEmbed" },
-                ],
-                description: 'Select the embed to post.',
-                required: true,
-            }
-        ]
-    },
+                )
+        )
+        .addChannelOption((option) =>
+            option.setName("channel")
+                .setDescription("A valid channel to post in.")
+        ),
 
     restrictions: {
         userRestricted: true,
@@ -37,7 +31,7 @@ export const command: Command = {
     permissions: PermissionsBitField.Flags.Administrator,
 
     callback: async (client, interaction) => {
-        const channel = interaction.options.getChannel("channel", true) as TextChannel
+        const channel = interaction.options.getChannel("channel") as TextChannel || interaction.channel as TextChannel
         if (!channel || !channel.isTextBased())
             return interaction.reply({ content: "You cannot create a message in this channel!", flags: "Ephemeral" })
 
@@ -81,9 +75,9 @@ export const command: Command = {
             .setTitle("⚖️┃Legal Action & Server Protection")
             .setDescription("You're not just messing with a Discord server — you're messing with a company that takes its security seriously.")
             .addFields(
-                { name: "🔐 OverTake is protected", value: "We have legal counsel available in case of major rule-breaking, including, but not limited to the following; \n • Attempting to hack or nuke the server\n • Breaking Discord's Terms of Service\n • Sharing or stealing sensitive data\n • Any form of digital sabotage against the organization or its members"},
-                { name: "📚 We take this seriously", value: "If any of the above actions occur, our legal representative will review the situation and guide us on next steps — including possible reporting to Discord and beyond."},
-                { name: "🧠 Reminder", value: "Think before you act — everything done on Discord is logged — actions have consequences."}
+                { name: "🔐 OverTake is protected", value: "We have legal counsel available in case of major rule-breaking, including, but not limited to the following; \n • Attempting to hack or nuke the server\n • Breaking Discord's Terms of Service\n • Sharing or stealing sensitive data\n • Any form of digital sabotage against the organization or its members" },
+                { name: "📚 We take this seriously", value: "If any of the above actions occur, our legal representative will review the situation and guide us on next steps — including possible reporting to Discord and beyond." },
+                { name: "🧠 Reminder", value: "Think before you act — everything done on Discord is logged — actions have consequences." }
             )
             .setImage("https://cdn.discordapp.com/attachments/1449408606821945529/1450948572811100210/Pinkbanner.jpg?ex=694464a9&is=69431329&hm=8d55d94f0fea138820ac7f93f8adae4ff3ecc4172e834aa61b7550755ec8468e&")
             .setColor("#d768bb")

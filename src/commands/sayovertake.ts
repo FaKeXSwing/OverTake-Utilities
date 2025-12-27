@@ -1,21 +1,17 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'sayovertake',
-        description: "Says a message as OverTake Utilities.",
-        options: [
-            { 
-                name: 'message', 
-                type: ApplicationCommandOptionType.String, 
-                description: 'A message to send as the bot.',
-                required: true
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("sayovertake")
+        .setDescription("Says a message as OverTake Utilities")
+        .addStringOption((option) =>
+            option.setName("message")
+                .setDescription("A message to send as the bot.")
+                .setRequired(true)
+        ),
 
     permissions: PermissionsBitField.Flags.Administrator,
 

@@ -1,29 +1,24 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 import { registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
 
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'kick',
-        description: "Kicks a member from a Discord Guild.",
-        options: [
-            { 
-                name: 'target', 
-                type: ApplicationCommandOptionType.User, 
-                description: 'A valid user to kick.',
-                required: true, 
-            },
-            { 
-                name: 'reason', 
-                type: ApplicationCommandOptionType.String, 
-                description: 'A valid reason for kicking the user.' 
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("kick")
+        .setDescription("Kicks a member from the Discord Guild.")
+        .addUserOption((option) =>
+            option.setName("target")
+                .setDescription("A valid user to kick.")
+                .setRequired(true)
+        )
+        .addStringOption((option) =>
+            option.setName("reason")
+                .setDescription("A valid reason for kicking the user.")
+        ),
 
     permissions: PermissionsBitField.Flags.KickMembers,
 
