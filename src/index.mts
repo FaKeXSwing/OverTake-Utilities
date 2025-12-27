@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import './keep_alive.js';
-import './dashboard/server.js'
+// import './dashboard/server.js'
 import { Client, IntentsBitField, Partials } from 'discord.js'
 import { commands } from './utilities/commands.js';
 import { setupDatabase } from './routes/database.js';
