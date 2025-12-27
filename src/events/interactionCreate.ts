@@ -96,7 +96,7 @@ export async function execute(client: Client, interaction: Interaction) {
 //             const guild = interaction.guild!
 //             const user = interaction.user;
 
-//             const staffRole = guild.roles.cache.get(roles.devstaff)
+//             const staffRole = guild.roles.cache.get(roles.dev_staff)
 //             if (!staffRole) return
 
 //             const categoryId = categories[ticketType]
