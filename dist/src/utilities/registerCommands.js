@@ -14,7 +14,7 @@ export async function registerCommands(client) {
         const { command } = await import(`../commands/${commandFile}`);
         if (!command || !command.data)
             continue;
-        commands.push(command.data);
+        commands.push(command.data.toJSON());
     }
     const token = environment === Environment.Production ? process.env.PROD_TOKEN : process.env.DEV_TOKEN;
     const rest = new REST({ version: "10" }).setToken(token || "");

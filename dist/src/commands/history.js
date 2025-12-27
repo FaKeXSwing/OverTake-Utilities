@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 import config from '../../config.json' with { type: "json" };
 const { channels } = config;
@@ -6,22 +6,13 @@ import { getCasesByUser } from "../utilities/moderation.js";
 import { convertToRealtime } from "../utilities/parseLength.js";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: 'history',
-        description: "Returns the moderation history of a user.",
-        options: [
-            {
-                name: 'target',
-                type: ApplicationCommandOptionType.User,
-                description: 'A valid user to view the history of.',
-            },
-            {
-                name: 'page',
-                type: ApplicationCommandOptionType.Number,
-                description: 'Select the page to view.',
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("history")
+        .setDescription("Returns the moderation history of a user.")
+        .addUserOption((option) => option.setName("target")
+        .setDescription("A valid user to view the history of."))
+        .addNumberOption((option) => option.setName("page")
+        .setDescription("Select the page to view.")),
     permissions: PermissionsBitField.Flags.ModerateMembers,
     callback: async (client, interaction) => {
         const embed = new EmbedBuilder();

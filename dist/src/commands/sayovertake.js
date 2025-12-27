@@ -1,19 +1,13 @@
-import { ApplicationCommandOptionType, PermissionsBitField } from "discord.js";
+import { PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: 'sayovertake',
-        description: "Says a message as OverTake Utilities.",
-        options: [
-            {
-                name: 'message',
-                type: ApplicationCommandOptionType.String,
-                description: 'A message to send as the bot.',
-                required: true
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("sayovertake")
+        .setDescription("Says a message as OverTake Utilities")
+        .addStringOption((option) => option.setName("message")
+        .setDescription("A message to send as the bot.")
+        .setRequired(true)),
     permissions: PermissionsBitField.Flags.Administrator,
     restrictions: {
         userRestricted: true

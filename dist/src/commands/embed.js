@@ -1,49 +1,22 @@
-import { ApplicationCommandOptionType, Colors, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { Colors, EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: "embed",
-        description: "Create a custom embed.",
-        options: [
-            {
-                name: "title",
-                description: "The title of the embed",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "description",
-                description: "The embed's description",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "color",
-                description: "A hex color (example: #ff0000)",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "footer",
-                description: "Footer text",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "thumbnail",
-                description: "Thumbnail image URL",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-            {
-                name: "image",
-                description: "Main image URL",
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("embed")
+        .setDescription("DEVELOPER ONLY: Creates a custom embed.")
+        .addStringOption((option) => option.setName("title")
+        .setDescription("The embed's title."))
+        .addStringOption((option) => option.setName("description")
+        .setDescription("The embed's description."))
+        .addStringOption((option) => option.setName("color")
+        .setDescription("A hex color (example: #ff0000)."))
+        .addStringOption((option) => option.setName("footer")
+        .setDescription("The embed's footer."))
+        .addStringOption((option) => option.setName("thumbnail")
+        .setDescription("The embed's thumbnail."))
+        .addStringOption((option) => option.setName("image")
+        .setDescription("The embed's image.")),
     restrictions: {
         userRestricted: true,
     },

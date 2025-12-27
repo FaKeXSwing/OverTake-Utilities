@@ -1,38 +1,22 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
+import { EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout);
 export const command = {
-    data: {
-        name: "devmessage",
-        description: "Developer only.",
-        options: [
-            {
-                name: 'channel',
-                type: ApplicationCommandOptionType.Channel,
-                description: 'A valid channel to post in.',
-                required: true,
-            },
-            {
-                name: 'message',
-                type: ApplicationCommandOptionType.String,
-                choices: [
-                    { name: "Rules Embed", value: "rulesEmbed" },
-                    { name: "About Embed", value: "aboutEmbed" },
-                    { name: "Welcome Embed", value: "welcomeEmbed" },
-                    { name: "Invest Embed", value: "investEmbed" },
-                    { name: "Policies Embed", value: "policiesEmbed" },
-                ],
-                description: 'Select the embed to post.',
-                required: true,
-            }
-        ]
-    },
+    data: new SlashCommandBuilder()
+        .setName("devmessage")
+        .setDescription("Developer only.")
+        .addStringOption((option) => option.setName("message")
+        .setDescription("Select the embed to post.")
+        .setRequired(true)
+        .addChoices({ name: "Rules Embed", value: "rulesEmbed" }, { name: "About Embed", value: "aboutEmbed" }, { name: "Welcome Embed", value: "welcomeEmbed" }, { name: "Invest Embed", value: "investEmbed" }, { name: "Policies Embed", value: "policiesEmbed" }))
+        .addChannelOption((option) => option.setName("channel")
+        .setDescription("A valid channel to post in.")),
     restrictions: {
         userRestricted: true,
     },
     permissions: PermissionsBitField.Flags.Administrator,
     callback: async (client, interaction) => {
-        const channel = interaction.options.getChannel("channel", true);
+        const channel = interaction.options.getChannel("channel") || interaction.channel;
         if (!channel || !channel.isTextBased())
             return interaction.reply({ content: "You cannot create a message in this channel!", flags: "Ephemeral" });
         const aboutEmbed = new EmbedBuilder()
