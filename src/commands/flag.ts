@@ -3,6 +3,9 @@ import { MessageContextCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout)
 
+import config from '../../config.json' with { type: "json" }
+const { channels } = config
+
 export const command: MessageContextCommand = {
     data: new ContextMenuCommandBuilder()
         .setName("Flag Message")
@@ -19,7 +22,7 @@ export const command: MessageContextCommand = {
         if (!guild)
             return interaction.reply({ content: "You cannot flag messages outside of servers!", flags: "Ephemeral"})
 
-        const channel = client.channels.cache.get("1449408606821945529") as TextChannel // FIX WHEN PROD
+        const channel = client.channels.cache.get(channels.moderationLogs) as TextChannel // FIX WHEN PROD
         if (!channel || !channel.isTextBased())
             return interaction.reply({ content: "Failed to flag message; A valid logging channel must be set up.", flags: "Ephemeral" })
 
@@ -49,7 +52,7 @@ export const command: MessageContextCommand = {
                     .setStyle(ButtonStyle.Danger)
             )
 
-        const loggedMessage = await channel.send({ embeds: [embed], components: [row] })
+        const loggedMessage = await channel.send({ content: "<@&1324152526148341790>", embeds: [embed], components: [row] })
 
         const collector = channel.createMessageComponentCollector({ filter: i => i.customId === "delete_messages" });
         collector.on('collect', async i => {
