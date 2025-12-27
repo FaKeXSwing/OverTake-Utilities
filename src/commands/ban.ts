@@ -1,34 +1,28 @@
-import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, SlashCommandBuilder } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 import { parseLength } from "../utilities/parseLength.js";
 import { registerCase } from "../utilities/moderation.js";
 import { Infraction } from "../models/case.js";
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'ban',
-        description: "Bans a member from a Discord Guild.",
-        options: [
-            {
-                name: 'target',
-                type: ApplicationCommandOptionType.User,
-                description: 'A valid user to ban.',
-                required: true,
-            },
-            {
-                name: 'reason',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid reason for banning the user.'
-            },
-            {
-                name: 'length',
-                type: ApplicationCommandOptionType.String,
-                description: 'A valid length for the ban (1d, 2h, 30m etc.).'
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("ban")
+        .setDescription("Bans a member from the Discord Guild. TESTING TESTING")
+        .addUserOption((option) =>
+            option.setName("target")
+                .setDescription("A valid user to ban.")
+                .setRequired(true)
+        )
+        .addStringOption((option) => 
+            option.setName("reason")
+                .setDescription("A valid reason for banning the user.")
+        )
+        .addStringOption((option) => 
+            option.setName("length")
+                .setDescription("A valid length for the ban (1d, 2h, 30m etc.).")
+        ),
 
     permissions: PermissionsBitField.Flags.BanMembers,
 

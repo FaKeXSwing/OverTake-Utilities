@@ -1,5 +1,5 @@
-import { APIEmbed, APIEmbedField, ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { APIEmbed, APIEmbedField, ApplicationCommandOptionType, EmbedBuilder, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 import config from '../../config.json' with { type: "json" }
 const { channels } = config
@@ -9,23 +9,18 @@ import { convertToRealtime } from "../utilities/parseLength.js";
 
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'history',
-        description: "Returns the moderation history of a user.",
-        options: [
-            {
-                name: 'target',
-                type: ApplicationCommandOptionType.User,
-                description: 'A valid user to view the history of.',
-            },
-            {
-                name: 'page',
-                type: ApplicationCommandOptionType.Number,
-                description: 'Select the page to view.',
-            },
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("history")
+        .setDescription("Returns the moderation history of a user.")
+        .addUserOption((option) =>
+            option.setName("target")
+                .setDescription("A valid user to view the history of.")
+        )
+        .addNumberOption((option) =>
+            option.setName("page")
+                .setDescription("Select the page to view.")
+        ),
 
     permissions: PermissionsBitField.Flags.ModerateMembers,
 

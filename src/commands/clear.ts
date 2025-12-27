@@ -1,21 +1,17 @@
-import { ApplicationCommandOptionType, PermissionsBitField, TextChannel } from "discord.js";
-import { Command } from "../types/CommandType.js";
+import { ApplicationCommandOptionType, PermissionsBitField, SlashCommandBuilder, TextChannel } from "discord.js";
+import { SlashCommand } from "../types/CommandType.js";
 import { promisify } from "util";
 const wait = promisify(setTimeout)
 
-export const command: Command = {
-    data: {
-        name: 'clear',
-        description: "Clears a specified amount of messages from the channel.",
-        options: [
-            { 
-                name: 'amount', 
-                type: ApplicationCommandOptionType.Integer, 
-                description: 'A valid number between 1-100.',
-                required: true, 
-            }
-        ]
-    },
+export const command: SlashCommand = {
+    data: new SlashCommandBuilder()
+        .setName("clear")
+        .setDescription("Clears a specified amount of messages from the channel.")
+        .addIntegerOption((option) =>
+            option.setName("amount")
+                .setDescription("A valid number between 1-100.")
+                .setRequired(true)
+        ),
 
     permissions: PermissionsBitField.Flags.ManageMessages,
 
