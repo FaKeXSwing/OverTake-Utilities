@@ -15,7 +15,7 @@ export async function registerCommands(client: Client) {
     for (const commandFile of commandFiles) {
         const { command } = await import(`../commands/${commandFile}`)
         if (!command || !command.data) continue
-        commands.push(command.data)
+        commands.push(command.data.toJSON())
     }
 
     const token = environment === Environment.Production ? process.env.PROD_TOKEN : process.env.DEV_TOKEN
@@ -27,15 +27,15 @@ export async function registerCommands(client: Client) {
         if (environment === "development") {
             await rest.put(
                 Routes.applicationGuildCommands(clientId, servers.development),
-                { body: commands}
+                { body: commands }
             )
         } else {
             await rest.put(
                 Routes.applicationGuildCommands(clientId, servers.production),
-                { body: commands}
+                { body: commands }
             )
         }
-        
+
         console.log(`✅ Successfully registered commands in the ${environment} environment!`);
 
     } catch (err) {

@@ -7,6 +7,7 @@ declare module "express-session" {
             username: string,
             discriminator: string,
             avatar: string,
-        }
+        },
+        accessToken?: string
     }
 }

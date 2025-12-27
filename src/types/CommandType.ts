@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, Client, Options, PermissionResolvable } from "discord.js";
+import { ChatInputCommandInteraction, Client, ContextMenuCommandBuilder, Interaction, MessageContextMenuCommandInteraction, ModalBuilder, ModalSubmitInteraction, PermissionResolvable, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, UserContextMenuCommandInteraction } from "discord.js";
 
 /**
  * Represents a Discord Application Command.
@@ -6,22 +6,8 @@ import { ChatInputCommandInteraction, Client, Options, PermissionResolvable } fr
  * Use this interface for defining any command your bot supports.
  * Each command should include its `data`, optional `restrictions` or `permissions`, and a `callback`.
  */
-export interface Command {
-    data: {
-        name: string;
-        description: string;
-
-        /**
-         * Optional **command options** (arguments or parameters).
-         * Example:
-         * ```ts
-         * options: [
-         *   { name: 'target', type: 'USER', description: 'Target user' }
-         * ]
-         * ```
-         */
-        options?: Options;
-    };
+export interface Command<TInteraction extends Interaction, TBuilder> {
+    data: TBuilder
 
     /**
      * Optional **restrictions** for this command.
@@ -64,5 +50,19 @@ export interface Command {
      * }
      * ```
      */
-    callback: (client: Client, interaction: ChatInputCommandInteraction) => void;
+    callback: (
+        client: Client, 
+        interaction: TInteraction
+    ) => Promise<any> | any;
 }
+
+export type SlashCommand = Command<ChatInputCommandInteraction, SlashCommandBuilder | SlashCommandOptionsOnlyBuilder>;
+export type MessageContextCommand = Command<MessageContextMenuCommandInteraction, ContextMenuCommandBuilder>;
+export type UserContextCommand = Command<UserContextMenuCommandInteraction, ContextMenuCommandBuilder>;
+export type ModalCommand = Command<ModalSubmitInteraction, ModalBuilder>;
+
+export type AnyCommand = 
+    | SlashCommand
+    | MessageContextCommand
+    | UserContextCommand
+    | ModalCommand
